@@ -14,8 +14,6 @@ page_count = 1
 while url:
     # Use requests to get the webpage
     response = requests.get(url)
-    # Debugging tool
-    print(response.status_code)
     
     # Initialize BeautifulSoup and the html.parser
     soup = BeautifulSoup(response.content, 'html.parser')
@@ -30,9 +28,9 @@ while url:
         quote = quote_class.find('span', class_='text').text.strip()
         author = quote_class.find('small', class_='author').text.strip()
         tags = quote_class.find('div', class_='tags').text.strip()
-        tags = re.sub(r'\s+', ' ', tags)  # Replace multiple whitespace with a single space
-        tags = re.sub(r',\s*', ',', tags)  # Remove whitespace after commas
-        tags = re.sub(r'^Tags:|,$', '', tags) # Remove Tags: and trailing commas
+        # Clean tags data
+        tags = quote_class.find('div', class_='tags').text.lstrip().replace('Tags:', '').replace('\n', ',').rstrip(',')
+        tags = re.sub(r'^,\s*,', '', tags) 
 
 
         # Split each tag into a separate object 
@@ -47,11 +45,12 @@ while url:
     
     # Send the parsed_page to the parsed_dict
     parsed_dict.update({'Page' + str(page_count): parsed_page})
+    print(f'page {page_count} is complete!')
+    page_count +=1
     # Check to see if there is a next page; if there isn't, then stop the while loop
     try:
         next_link = soup.find('li', class_='next').find('a')
-        url = "https://quotes.toscrape.com" + next_link['href']
-        page_count +=1
+        url = "https://quotes.toscrape.com" + next_link['href'] 
     except AttributeError:
         print("No more pages to parse")
         url = None
