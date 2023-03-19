@@ -22,8 +22,7 @@ while url:
     
     parsed_page = {}
     # Parse through each element found and extract the quote, author, and tags
-    quote_count = 1
-    for quote_class in quotes_class:
+    for quote_count,quote_class in enumerate(quotes_class, start=1):
         # Extract quotes, authors, and tags from quote_class
         quote = quote_class.find('span', class_='text').text.strip()
         author = quote_class.find('small', class_='author').text.strip()
@@ -31,7 +30,6 @@ while url:
         # Clean tags data
         tags = quote_class.find('div', class_='tags').text.lstrip().replace('Tags:', '').replace('\n', ',').rstrip(',')
         tags = re.sub(r'^,\s*,', '', tags) 
-
 
         # Split each tag into a separate object 
         tag_list = []
@@ -41,7 +39,6 @@ while url:
                 
         # Send the extracted data to parsed_page dict
         parsed_page.update({'Quote' + str(quote_count):{'quote': quote, 'author': author, 'tags': tag_list}})
-        quote_count += 1
     
     # Send the parsed_page to the parsed_dict
     parsed_dict.update({'Page' + str(page_count): parsed_page})
