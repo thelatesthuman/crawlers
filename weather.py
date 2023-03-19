@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup
 
 try:
     # Send an HTTP request to weather.com url
-    url = str(sys.argv[1])
+    url = str('your weather.com url here')
     response = requests.get(url)
 
     # Parse file and extract the temp, weather, and day/night temps
