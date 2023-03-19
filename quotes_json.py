@@ -29,9 +29,12 @@ while url:
         # Extract quotes, authors, and tags from quote_class
         quote = quote_class.find('span', class_='text').text.strip()
         author = quote_class.find('small', class_='author').text.strip()
-        tags = quote_class.find('div', class_='tags').text.lstrip().replace('Tags:', '').replace('\n', ',').rstrip(',')
-        tags = re.sub(r'^,\s*,', '', tags)
-        
+        tags = quote_class.find('div', class_='tags').text.strip()
+        tags = re.sub(r'\s+', ' ', tags)  # Replace multiple whitespace with a single space
+        tags = re.sub(r',\s*', ',', tags)  # Remove whitespace after commas
+        tags = re.sub(r'^Tags:|,$', '', tags) # Remove Tags: and trailing commas
+
+
         # Split each tag into a separate object 
         tag_list = []
         for tag in tags.split('\n'):
