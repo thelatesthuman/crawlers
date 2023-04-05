@@ -25,7 +25,7 @@ try:
         if IP_SET[index] == '':
             del IP_SET[index]
     
-    # Send an http request to each IP in IP_SET   
+    # Check each IP in IP_SET against the Shodan database   
     ip_dict = {}
     for ip_count,IP in enumerate(tqdm(IP_SET), start=1):
         try:
